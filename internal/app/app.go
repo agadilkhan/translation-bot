@@ -1,29 +1,26 @@
-package bot
+package app
 
 import (
 	"fmt"
-	"github.com/agadilkhan/translation-bot/webapi"
+	"github.com/agadilkhan/translation-bot/internal/bot"
 	"github.com/bwmarrin/discordgo"
+	"github.com/joho/godotenv"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
 )
 
-type Bot struct {
-	Token             string
-	TranslationWebApi *webapi.TranslationWebApi
-}
+func Run() {
 
-func New(token string) *Bot {
-	t := webapi.New()
-
-	return &Bot{
-		Token:             token,
-		TranslationWebApi: t,
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Error loading .env file")
 	}
-}
 
-func (b *Bot) Run() {
+	discordToken := os.Getenv("DISCORD_TOKEN")
+
+	b := bot.New(discordToken)
+
 	// create a new Discord bot session using the provided bot token
 	dg, err := discordgo.New("Bot " + b.Token)
 	if err != nil {
@@ -32,7 +29,7 @@ func (b *Bot) Run() {
 	}
 
 	// register an event handler
-	dg.AddHandler(messageHandler)
+	dg.AddHandler(b.MessageHandler)
 
 	dg.Identify.Intents = discordgo.IntentsAllWithoutPrivileged
 

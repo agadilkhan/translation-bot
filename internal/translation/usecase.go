@@ -1,16 +1,9 @@
-package webapi
+package translation
 
 import (
 	"fmt"
 	translator "github.com/Conight/go-googletrans"
 )
-
-type Translation struct {
-	Source      string
-	Destination string
-	Original    string
-	Translation string
-}
 
 type TranslationWebApi struct {
 	conf translator.Config
