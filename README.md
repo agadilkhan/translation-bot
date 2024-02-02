@@ -1,5 +1,6 @@
 # Translator Bot
-### Simple Discord bot for translation
+## About project
+Simple Discord bot for determining the language of the text and subsequent translation into the selected language.
 
 ***
 
@@ -31,4 +32,7 @@ To run the discord bot from root directory, execute the following command
 ```shell
 go run main.go
 ```
-![Screenshot 2023-04-03 181545] (https://github.com/agadilkhan/translation-bot/img/example_screen.png)
+![image](img/example_screen.png)
+
+## Contact
+[Alfarabi Agadilkhan](https://t.me/agadilkhan) (aagadilkhan@gmail.com)

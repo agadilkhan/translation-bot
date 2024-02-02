@@ -9,7 +9,7 @@ import (
 )
 
 func (b *Bot) MessageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
-
+	// ignore messages from the bot itself
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
@@ -26,6 +26,7 @@ func (b *Bot) MessageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
+	// parse the translation command arguments
 	args, err := parseTranslateCommand(msg)
 	if err != nil {
 		log.Printf("parseTranslateCommand err: %v", err)
@@ -35,6 +36,7 @@ func (b *Bot) MessageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	targetLang, text := args[0], args[1]
 
+	// launch a goroutine to handle the translation asynchronously
 	go func() {
 		res, err := b.TranslationWebApi.Translate(translation.Translation{
 			Source:      "auto",
@@ -43,6 +45,7 @@ func (b *Bot) MessageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		})
 
 		b.mu.Lock()
+		// remove the user ID from the pending map after translation is done
 		delete(b.pending, m.Author.ID)
 		b.mu.Unlock()
 
@@ -60,6 +63,7 @@ func (b *Bot) MessageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 func parseTranslateCommand(message string) ([]string, error) {
 	words := strings.Fields(message)
 
+	// check if the command has at least three words
 	if len(words) < 3 {
 		return nil, fmt.Errorf("the command must have at least three words")
 	}
