@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/agadilkhan/translation-bot/internal/app"
+	"github.com/agadilkhan/translator-bot/internal/app"
 )
 
 func main() {

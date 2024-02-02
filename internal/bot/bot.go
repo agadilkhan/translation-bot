@@ -1,12 +1,15 @@
 package bot
 
 import (
-	"github.com/agadilkhan/translation-bot/internal/translation"
+	"github.com/agadilkhan/translator-bot/internal/translation"
+	"sync"
 )
 
 type Bot struct {
 	Token             string
 	TranslationWebApi *translation.TranslationWebAPI
+	mu                sync.Mutex
+	pending           map[string]struct{}
 }
 
 func New(token string) *Bot {
@@ -15,5 +18,6 @@ func New(token string) *Bot {
 	return &Bot{
 		Token:             token,
 		TranslationWebApi: t,
+		pending:           make(map[string]struct{}),
 	}
 }

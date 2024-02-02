@@ -2,7 +2,7 @@ package app
 
 import (
 	"fmt"
-	"github.com/agadilkhan/translation-bot/internal/bot"
+	"github.com/agadilkhan/translator-bot/internal/bot"
 	"github.com/bwmarrin/discordgo"
 	"github.com/joho/godotenv"
 	"log"

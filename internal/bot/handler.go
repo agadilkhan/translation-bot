@@ -2,7 +2,7 @@ package bot
 
 import (
 	"fmt"
-	"github.com/agadilkhan/translation-bot/internal/translation"
+	"github.com/agadilkhan/translator-bot/internal/translation"
 	"github.com/bwmarrin/discordgo"
 	"log"
 	"strings"
@@ -28,26 +28,33 @@ func (b *Bot) MessageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	args, err := parseTranslateCommand(msg)
 	if err != nil {
+		log.Printf("parseTranslateCommand err: %v", err)
 		s.ChannelMessageSend(m.ChannelID, "`Invalid command. Use '!translate help' for usage.`")
 		return
 	}
 
 	targetLang, text := args[0], args[1]
 
-	trans := translation.Translation{
-		Source:      "auto",
-		Destination: targetLang,
-		Original:    text,
-	}
+	go func() {
+		res, err := b.TranslationWebApi.Translate(translation.Translation{
+			Source:      "auto",
+			Destination: targetLang,
+			Original:    text,
+		})
 
-	res, err := b.TranslationWebApi.Translate(trans)
-	if err != nil {
-		log.Printf("Translate err: %v", err)
-		s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("`Ooops... Some error.`"))
-		return
-	}
+		b.mu.Lock()
+		delete(b.pending, m.Author.ID)
+		b.mu.Unlock()
 
-	s.ChannelMessageSend(m.ChannelID, res.Translation)
+		if err != nil {
+			log.Printf("Translate err: %v", err)
+			s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("`Ooops... Some error.`"))
+			return
+		}
+
+		s.ChannelMessageSend(m.ChannelID, res.Translation)
+	}()
+
 }
 
 func parseTranslateCommand(message string) ([]string, error) {

@@ -1,4 +1,4 @@
-module github.com/agadilkhan/translation-bot
+module github.com/agadilkhan/translator-bot
 
 go 1.21.3
 
