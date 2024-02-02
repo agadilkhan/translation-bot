@@ -6,7 +6,7 @@ import (
 
 type Bot struct {
 	Token             string
-	TranslationWebApi *translation.TranslationWebApi
+	TranslationWebApi *translation.TranslationWebAPI
 }
 
 func New(token string) *Bot {

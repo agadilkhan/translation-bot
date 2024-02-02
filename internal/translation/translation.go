@@ -1,8 +1,8 @@
 package translation
 
 type Translation struct {
-	Source      string
-	Destination string
-	Original    string
-	Translation string
+	Source      string `example:"auto"`
+	Destination string `example:"en"`
+	Original    string `example:"текст для перевода"`
+	Translation string `example:"text for translation"`
 }
